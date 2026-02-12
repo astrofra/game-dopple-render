@@ -74,6 +74,15 @@ size_flags_horizontal = 3
 text = "Intro"
 autowrap_mode = 3
 
+[node name="ModeLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/IntroScreen"]
+layout_mode = 2
+text = "Mode"
+horizontal_alignment = 1
+
+[node name="ModeSelect" type="OptionButton" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/IntroScreen"]
+custom_minimum_size = Vector2(320, 46)
+layout_mode = 2
+
 [node name="StartButton" type="Button" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/IntroScreen"]
 custom_minimum_size = Vector2(220, 56)
 layout_mode = 2
@@ -91,9 +100,19 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "Pair 1/10"
 
+[node name="ModeStatusLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+layout_mode = 2
+text = "Mode: EASY"
+
 [node name="HintLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
 layout_mode = 2
 text = "(Tap/click on the real photo)"
+
+[node name="TimerLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Time left: 5.0s"
 
 [node name="PairRow" type="HBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
 layout_mode = 2
@@ -132,6 +151,22 @@ stretch_mode = 5
 visible = false
 layout_mode = 2
 text = "Loading next pair..."
+
+[node name="MonoAnswerRow" type="HBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="RealAnswerButton" type="Button" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen/MonoAnswerRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "REAL"
+
+[node name="FakeAnswerButton" type="Button" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen/MonoAnswerRow"]
+custom_minimum_size = Vector2(200, 50)
+layout_mode = 2
+text = "FAKE"
 
 [node name="ResultScreen" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack"]
 visible = false
