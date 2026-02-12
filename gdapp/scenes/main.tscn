@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://cc8sg3dr7xyxu"]
 
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_qow5u"]
+[ext_resource type="Script" uid="uid://bgacjo6tvcax3" path="res://scripts/main.gd" id="1_qow5u"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -34,9 +34,9 @@ theme_override_constants/margin_bottom = 30
 
 [node name="RootColumn" type="VBoxContainer" parent="SafeArea"]
 layout_mode = 2
-theme_override_constants/separation = 16
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme_override_constants/separation = 16
 
 [node name="Card" type="PanelContainer" parent="SafeArea/RootColumn"]
 layout_mode = 2
@@ -150,17 +150,14 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 34
 text = "Your score: 0/10"
 
-[node name="RecapScroll" type="ScrollContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
-custom_minimum_size = Vector2(0, 420)
+[node name="RecapGrid" type="GridContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
+custom_minimum_size = Vector2(0, 500)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-horizontal_scroll_mode = 0
-
-[node name="RecapList" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/RecapScroll"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 10
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 5
 
 [node name="ReplayButton" type="Button" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
 custom_minimum_size = Vector2(220, 56)

@@ -43,7 +43,7 @@ var pending_right_path := ""
 
 @onready var result_title: Label = $SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/ResultTitle
 @onready var score_label: Label = $SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/ScoreLabel
-@onready var recap_list: VBoxContainer = $SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/RecapScroll/RecapList
+@onready var recap_grid: GridContainer = $SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/RecapGrid
 @onready var replay_button: Button = $SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/ReplayButton
 
 
@@ -364,31 +364,48 @@ func build_result_screen() -> void:
 
 	for index in range(rounds.size()):
 		var round := rounds[index]
-		var row := build_recap_row(index, round)
-		recap_list.add_child(row)
+		var tile := build_recap_tile(index, round)
+		recap_grid.add_child(tile)
 
 
 func clear_recap_entries() -> void:
-	for child in recap_list.get_children():
+	for child in recap_grid.get_children():
 		child.queue_free()
 
 
-func build_recap_row(index: int, round: Dictionary) -> Control:
-	var row := HBoxContainer.new()
-	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	row.add_theme_constant_override("separation", 14)
+func build_recap_tile(index: int, round: Dictionary) -> Control:
+	var tile := PanelContainer.new()
+	tile.custom_minimum_size = Vector2(300, 220)
+	tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	tile.add_theme_stylebox_override("panel", make_panel_style(Color(0.14, 0.15, 0.18, 1.0), Color(0.32, 0.35, 0.39, 1.0), 12, 2))
+
+	var tile_padding := MarginContainer.new()
+	tile_padding.add_theme_constant_override("margin_left", 10)
+	tile_padding.add_theme_constant_override("margin_top", 10)
+	tile_padding.add_theme_constant_override("margin_right", 10)
+	tile_padding.add_theme_constant_override("margin_bottom", 10)
+	tile.add_child(tile_padding)
+
+	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 8)
+	tile_padding.add_child(content)
 
 	var index_label := Label.new()
 	index_label.text = "Pair %d" % [index + 1]
-	index_label.custom_minimum_size = Vector2(90, 36)
+	index_label.custom_minimum_size = Vector2(90, 28)
 	index_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	row.add_child(index_label)
+	index_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	content.add_child(index_label)
+
+	var image_row := HBoxContainer.new()
+	image_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	image_row.add_theme_constant_override("separation", 8)
+	content.add_child(image_row)
 
 	var left_panel := create_recap_image_panel(round["left_path"])
 	var right_panel := create_recap_image_panel(round["right_path"])
-	row.add_child(left_panel)
-	row.add_child(right_panel)
+	image_row.add_child(left_panel)
+	image_row.add_child(right_panel)
 
 	var selected_panel := left_panel if int(round["user_choice"]) == 0 else right_panel
 	var was_correct := int(round["user_choice"]) == int(round["correct_choice"])
@@ -402,12 +419,12 @@ func build_recap_row(index: int, round: Dictionary) -> Control:
 		)
 	)
 
-	return row
+	return tile
 
 
 func create_recap_image_panel(texture_path: String) -> PanelContainer:
 	var panel := PanelContainer.new()
-	panel.custom_minimum_size = Vector2(180, 180)
+	panel.custom_minimum_size = Vector2(130, 130)
 	panel.add_theme_stylebox_override("panel", make_panel_style(Color(0.12, 0.13, 0.15, 1.0), Color(0.32, 0.35, 0.39, 1.0), 12, 2))
 
 	var margin := MarginContainer.new()
