@@ -1,0 +1,168 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_qow5u"]
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_qow5u")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.11, 0.12, 0.14, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 30
+
+[node name="RootColumn" type="VBoxContainer" parent="SafeArea"]
+layout_mode = 2
+theme_override_constants/separation = 16
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Card" type="PanelContainer" parent="SafeArea/RootColumn"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CardPadding" type="MarginContainer" parent="SafeArea/RootColumn/Card"]
+layout_mode = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 24
+
+[node name="ScreenStack" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="IntroScreen" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/IntroScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 50
+text = "_DoppleRender"
+
+[node name="IntroLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/IntroScreen"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Intro"
+autowrap_mode = 3
+
+[node name="StartButton" type="Button" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/IntroScreen"]
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+text = "Begin"
+
+[node name="GameScreen" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="RoundLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Pair 1/10"
+
+[node name="HintLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+layout_mode = 2
+text = "(Tap/click on the real photo)"
+
+[node name="PairRow" type="HBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="LeftFrame" type="PanelContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen/PairRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="LeftChoiceButton" type="TextureButton" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen/PairRow/LeftFrame"]
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="RightFrame" type="PanelContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen/PairRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RightChoiceButton" type="TextureButton" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen/PairRow/RightFrame"]
+custom_minimum_size = Vector2(460, 460)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+ignore_texture_size = true
+stretch_mode = 5
+
+[node name="LoadingLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/GameScreen"]
+visible = false
+layout_mode = 2
+text = "Loading next pair..."
+
+[node name="ResultScreen" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="ResultTitle" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "Summary"
+
+[node name="ScoreLabel" type="Label" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "Your score: 0/10"
+
+[node name="RecapScroll" type="ScrollContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
+custom_minimum_size = Vector2(0, 420)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="RecapList" type="VBoxContainer" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen/RecapScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="ReplayButton" type="Button" parent="SafeArea/RootColumn/Card/CardPadding/ScreenStack/ResultScreen"]
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+text = "Play again"
