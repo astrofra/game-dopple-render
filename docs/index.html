@@ -2,29 +2,64 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dopple Render</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container" id="intro">
     <h1>_DoppleRender</h1>
-    <p>You will see pairs of images : one is real, the other is AI-generated.<br>Click on the REAL photo. 10 pairs to identify. You'll get your score at the end.</p>
+    <p>You will see pairs of images: one is real, the other is AI-generated.<br>Choose a game mode, then identify 10 images. You'll get your score at the end.</p>
+    <div class="mode-selector">
+      <p class="mode-selector-title">Choose your mode</p>
+      <label class="mode-option">
+        <input type="radio" name="mode" value="soft" checked>
+        <span>
+          <strong>Soft</strong>
+          <small>Compare two images and click on the real photo.</small>
+        </span>
+      </label>
+      <label class="mode-option">
+        <input type="radio" name="mode" value="advanced">
+        <span>
+          <strong>Advanced</strong>
+          <small>See one image and decide whether it is real or AI-generated.</small>
+        </span>
+      </label>
+      <label class="mode-option">
+        <input type="radio" name="mode" value="turbo">
+        <span>
+          <strong>Turbo</strong>
+          <small>Advanced mode with only 5 seconds to answer.</small>
+        </span>
+      </label>
+    </div>
     <button onclick="startGame()">Begin</button>
   </div>
 
   <div class="container hidden" id="game">
-    <h2>Pair <span id="pairIndex">1</span>/10</h2>
-    <p>(Click on the real photo)</p>
-    <div class="pair">
-      <img id="img1" onclick="makeChoice(0)">
-      <img id="img2" onclick="makeChoice(1)">
+    <h2><span id="modeTitle">Soft</span> · Pair <span id="pairIndex">1</span>/<span id="roundsTotal">10</span></h2>
+    <p id="question">Click on the real photo.</p>
+    <div class="pair" id="softPair">
+      <img id="img1" onclick="makeChoice(0)" alt="First image">
+      <img id="img2" onclick="makeChoice(1)" alt="Second image">
     </div>
-    <p id="loadingMessage" style="display: none; font-style: italic; color: #666; margin-top: 1em;">Loading next pair...</p>
+    <div class="single-image hidden" id="advancedPair">
+      <img id="singleImg" alt="Image to identify">
+    </div>
+    <div class="answer-actions hidden" id="answerActions">
+      <button type="button" onclick="makeAdvancedChoice('real')">REAL</button>
+      <button type="button" onclick="makeAdvancedChoice('ai')">AI</button>
+    </div>
+    <div class="timer hidden" id="timer" aria-live="polite">
+      <span id="timeRemaining">5.0</span>s
+    </div>
+    <p id="loadingMessage">Loading next pair...</p>
   </div>
 
   <div class="container hidden" id="result">
     <h2>Summary</h2>
-    <p>Your score : <span id="score"></span>/10</p>
+    <p><span id="resultMode">Soft</span> score: <span id="score"></span>/<span id="resultTotal">10</span></p>
     <div id="recap"></div>
     <button onclick="startGame()">Play again</button>
   </div>
