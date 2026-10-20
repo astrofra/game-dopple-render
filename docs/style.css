@@ -20,20 +20,25 @@ button {
   background: #111;
   color: #0ff;
   border: 2px solid #0ff;
-  padding: 0.5em 1em;
+  min-height: 44px;
+  padding: 0.65em 1.25em;
   border-radius: 4px;
   margin-top: 1em;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
-button:hover {
+button:hover:not(:disabled) {
   background: #0ff;
   color: #111;
 }
 
-button:focus-visible,
-.mode-option:has(input:focus-visible) {
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+button:focus-visible {
   outline: 2px solid #fff;
   outline-offset: 3px;
 }
@@ -53,53 +58,49 @@ button:focus-visible,
 }
 
 .mode-selector {
-  max-width: 620px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5em;
+  max-width: 480px;
   margin: 2em auto 0;
-  text-align: left;
 }
 
-.mode-selector-title {
-  margin-bottom: 0.75em;
+.mode-selector button {
+  margin: 0;
+  padding: 0.75em 0.5em;
+  font-size: clamp(0.65rem, 2.6vw, 0.9rem);
+  white-space: nowrap;
+}
+
+.mode-selector button[aria-pressed="true"] {
+  background: #0ff;
+  color: #111;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+}
+
+.mode-selector button[aria-pressed="false"]:hover {
+  background: rgba(0, 255, 255, 0.1);
   color: #0ff;
-  font-family: 'Roboto Mono', monospace;
 }
 
-.mode-option {
+#modeDescription {
+  max-width: 480px;
+  min-height: 3em;
+  margin: 1em auto 0;
+  font-size: 1em;
+  line-height: 1.5;
+}
+
+.round-header {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75em;
-  padding: 0.9em 1em;
-  margin: 0.65em 0;
-  border: 1px solid #555;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1em;
 }
 
-.mode-option:hover,
-.mode-option:has(input:checked) {
-  border-color: #0ff;
-  background: rgba(0, 255, 255, 0.06);
-}
-
-.mode-option input {
-  accent-color: #0ff;
-  margin-top: 0.25em;
-}
-
-.mode-option strong,
-.mode-option small {
-  display: block;
-}
-
-.mode-option strong {
-  color: #eee;
-  font-family: 'Roboto Mono', monospace;
-}
-
-.mode-option small {
-  color: #aaa;
-  margin-top: 0.25em;
+.round-header h2 {
+  margin: 0;
 }
 
 .pair {
@@ -128,12 +129,12 @@ button:focus-visible,
 }
 
 .single-image img {
-  max-height: 65vh;
+  max-height: 48vh;
   object-fit: contain;
+  cursor: default;
 }
 
-.pair img:hover,
-.single-image img:hover {
+.pair img:hover {
   border-color: #0ff;
   box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
 }
@@ -162,9 +163,8 @@ button:focus-visible,
 }
 
 .timer {
-  max-width: 320px;
-  margin: 1.5em auto 0;
-  padding: 0.65em;
+  min-width: 90px;
+  padding: 0.5em 0.75em;
   color: #0ff;
   border: 1px solid #0ff;
   border-radius: 4px;
@@ -248,10 +248,17 @@ p {
   margin-top: 2em;
 }
 
+.result-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
 @media (max-width: 700px) {
   .container {
     margin: 1em;
-    padding: 1.25em;
+    padding: 1em;
   }
 
   .pair {

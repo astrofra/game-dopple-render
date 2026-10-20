@@ -1,5 +1,5 @@
 const GAME_LENGTH = 10;
-const TURBO_DURATION_MS = 5000;
+const TIME_ATTACK_DURATION_MS = 5000;
 const USED_PAIRS_STORAGE_KEY = "doppleRenderUsedPairs";
 
 let current = 0;
@@ -15,14 +15,38 @@ let roundsTotal = GAME_LENGTH;
 let timerId = null;
 let timerDeadline = 0;
 
+function selectMode(mode) {
+  selectedMode = mode;
+  document.querySelectorAll(".mode-selector button").forEach((button) => {
+    button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+  });
+
+  const description = document.getElementById("modeDescription");
+  if (mode === "soft") {
+    description.textContent = "Two images. Click on the real photo. No time limit.";
+  } else if (mode === "advanced") {
+    description.textContent = "One image. Decide: REAL or AI? No time limit.";
+  } else {
+    description.textContent = "One image. Decide: REAL or AI? You have 5 seconds per round.";
+  }
+}
+
+function showModeSelection() {
+  clearRoundTimer();
+  canClick = false;
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("intro").classList.remove("hidden");
+  document.querySelector('.mode-selector button[aria-pressed="true"]').focus();
+}
+
 function startGame() {
-  clearTurboTimer();
+  clearRoundTimer();
   current = 0;
   score = 0;
   order = [];
   rounds = [];
   seen = loadSeenPairs();
-  selectedMode = document.querySelector('input[name="mode"]:checked').value;
   roundsTotal = Math.min(GAME_LENGTH, Object.keys(imageMapping).length);
 
   document.getElementById("intro").classList.add("hidden");
@@ -67,11 +91,14 @@ function loadNext() {
     return;
   }
 
-  clearTurboTimer();
+  clearRoundTimer();
   canClick = false;
   imagesLoaded = 0;
+  document.querySelectorAll("#answerActions button").forEach((button) => {
+    button.disabled = true;
+  });
   document.getElementById("timer").classList.add("hidden");
-  document.getElementById("timeRemaining").textContent = (TURBO_DURATION_MS / 1000).toFixed(1);
+  document.getElementById("timeRemaining").textContent = (TIME_ATTACK_DURATION_MS / 1000).toFixed(1);
   showLoadingMessage();
 
   const pairId = getRandomPair();
@@ -94,10 +121,6 @@ function loadNext() {
   document.getElementById("pairIndex").textContent = current + 1;
 
   const mappingEntry = imageMapping[pairId];
-  if (!mappingEntry) {
-    console.error(`No mapping found for pair ${pairId}`);
-    return;
-  }
 
   if (selectedMode === "soft") {
     loadSoftPair(mappingEntry, pair.iaFirst);
@@ -137,7 +160,6 @@ function loadAdvancedImage(mappingEntry, displayedType) {
 
 function prepareImageForLoading(image) {
   image.classList.add("is-loading");
-  image.style.cursor = "not-allowed";
 }
 
 function makeChoice(choice) {
@@ -147,13 +169,17 @@ function makeChoice(choice) {
 
 function makeAdvancedChoice(choice) {
   if (!canClick || selectedMode === "soft") return;
+  if (selectedMode === "time-attack" && Date.now() >= timerDeadline) {
+    finishRound(null);
+    return;
+  }
   finishRound(choice);
 }
 
 function finishRound(choice) {
   const pair = order[current];
   canClick = false;
-  clearTurboTimer();
+  clearRoundTimer();
 
   const success = choice === pair.correct;
   if (success) score++;
@@ -177,34 +203,36 @@ function imageLoaded() {
   hideLoadingMessage();
   document.querySelectorAll("#softPair img, #advancedPair img").forEach((image) => {
     image.classList.remove("is-loading");
-    image.style.cursor = "pointer";
+  });
+  document.querySelectorAll("#answerActions button").forEach((button) => {
+    button.disabled = false;
   });
   canClick = true;
 
-  if (selectedMode === "turbo") {
+  if (selectedMode === "time-attack") {
     document.getElementById("timer").classList.remove("hidden");
-    startTurboTimer();
+    startTimeAttackTimer();
   }
 }
 
-function startTurboTimer() {
-  timerDeadline = Date.now() + TURBO_DURATION_MS;
-  updateTurboTimer();
-  timerId = setInterval(updateTurboTimer, 100);
+function startTimeAttackTimer() {
+  timerDeadline = Date.now() + TIME_ATTACK_DURATION_MS;
+  updateTimeAttackTimer();
+  timerId = setInterval(updateTimeAttackTimer, 100);
 }
 
-function updateTurboTimer() {
+function updateTimeAttackTimer() {
   const remaining = Math.max(0, timerDeadline - Date.now());
   const timer = document.getElementById("timer");
   document.getElementById("timeRemaining").textContent = (remaining / 1000).toFixed(1);
-  timer.style.setProperty("--timer-progress", `${remaining / TURBO_DURATION_MS * 100}%`);
+  timer.style.setProperty("--timer-progress", `${remaining / TIME_ATTACK_DURATION_MS * 100}%`);
 
   if (remaining === 0) {
     finishRound(null);
   }
 }
 
-function clearTurboTimer() {
+function clearRoundTimer() {
   if (timerId !== null) {
     clearInterval(timerId);
     timerId = null;
@@ -213,15 +241,14 @@ function clearTurboTimer() {
 
 function updateModeControls() {
   const isSoft = selectedMode === "soft";
-  const isTurbo = selectedMode === "turbo";
   document.getElementById("question").textContent = isSoft
     ? "Click on the real photo."
     : "Is this image REAL or AI-generated?";
   document.getElementById("answerActions").classList.toggle("hidden", isSoft);
-  document.getElementById("timer").classList.toggle("hidden", !isTurbo);
 }
 
 function getModeLabel() {
+  if (selectedMode === "time-attack") return "Time Attack";
   return selectedMode.charAt(0).toUpperCase() + selectedMode.slice(1);
 }
 
@@ -234,7 +261,7 @@ function hideLoadingMessage() {
 }
 
 function showResult() {
-  clearTurboTimer();
+  clearRoundTimer();
   document.getElementById("game").classList.add("hidden");
   document.getElementById("result").classList.remove("hidden");
   document.getElementById("score").textContent = score;
